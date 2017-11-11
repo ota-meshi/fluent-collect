@@ -1,12 +1,26 @@
 package io.github.otameshi.fc;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.function.Predicate;
 
 class WrapedFluentCollection<E> extends WrapedFluentIterable<E> implements FluentCollection<E> {
+	private static class MarkSerializable<E> extends WrapedFluentCollection<E> implements java.io.Serializable {
+		MarkSerializable(Collection<E> original) {
+			super(original);
+		}
+	}
+
+	static <E> WrapedFluentCollection<E> from(Collection<E> o) {
+		if (o instanceof Serializable) {
+			return new MarkSerializable<>(o);
+		}
+		return new WrapedFluentCollection<>(o);
+	}
+
 	private final Collection<E> original;
 
-	WrapedFluentCollection(Collection<E> original) {
+	protected WrapedFluentCollection(Collection<E> original) {
 		super(original);
 		this.original = original;
 	}

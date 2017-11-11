@@ -1,5 +1,6 @@
 package io.github.otameshi.fc;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -17,7 +18,7 @@ public interface FluentList<E> extends List<E>, FluentCollection<E> {
 		if (list instanceof FluentList) {
 			return (FluentList<E>) list;
 		}
-		return new WrapedFluentList<>(list);
+		return WrapedFluentList.from(list);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -27,16 +28,17 @@ public interface FluentList<E> extends List<E>, FluentCollection<E> {
 
 	@SafeVarargs
 	static <E> FluentList<E> of(E... values) {
+		E[] elements = Arrays.copyOf(values, values.length);
 		return new AbstractFluentList<E>() {
 
 			@Override
 			public E get(int index) {
-				return values[index];
+				return elements[index];
 			}
 
 			@Override
 			public int size() {
-				return values.length;
+				return elements.length;
 			}
 		};
 	}

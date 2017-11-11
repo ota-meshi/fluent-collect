@@ -10,7 +10,7 @@ public interface FluentSet<E> extends Set<E>, FluentCollection<E> {
 		if (set instanceof FluentSet) {
 			return (FluentSet<E>) set;
 		}
-		return new WrapedFluentSet<>(set);
+		return WrapedFluentSet.from(set);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -20,8 +20,14 @@ public interface FluentSet<E> extends Set<E>, FluentCollection<E> {
 
 	@SafeVarargs
 	static <E> FluentSet<E> of(E... values) {
-		//TODO check
-		FluentIterable<E> iterable = FluentIterable.of(values);
+		FluentList<E> iterable = FluentList.of(values);
+		for (int i = 0; i < iterable.size(); i++) {
+			E e = iterable.get(i);
+			if (iterable.skip(i).contains(e)) {
+				throw new IllegalArgumentException("duplicate element: " + e);
+			}
+		}
+
 		return new AbstractFluentSet<E>() {
 
 			@Override
@@ -31,7 +37,7 @@ public interface FluentSet<E> extends Set<E>, FluentCollection<E> {
 
 			@Override
 			public int size() {
-				return values.length;
+				return iterable.size();
 			}
 		};
 	}

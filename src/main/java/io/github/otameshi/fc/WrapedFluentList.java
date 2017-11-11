@@ -1,14 +1,28 @@
 package io.github.otameshi.fc;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
 import io.github.otameshi.fc.itr.FluentListIterator;
 
 class WrapedFluentList<E> extends WrapedFluentCollection<E> implements FluentList<E> {
+	private static class MarkSerializable<E> extends WrapedFluentList<E> implements java.io.Serializable {
+		MarkSerializable(List<E> original) {
+			super(original);
+		}
+	}
+
+	static <E> WrapedFluentList<E> from(List<E> o) {
+		if (o instanceof Serializable) {
+			return new MarkSerializable<>(o);
+		}
+		return new WrapedFluentList<>(o);
+	}
+
 	private final List<E> original;
 
-	WrapedFluentList(List<E> original) {
+	private WrapedFluentList(List<E> original) {
 		super(original);
 		this.original = original;
 	}

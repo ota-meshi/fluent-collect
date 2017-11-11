@@ -11,7 +11,7 @@ public interface FluentCollection<E> extends Collection<E>, FluentIterable<E> {
 		if (collection instanceof FluentCollection) {
 			return (FluentCollection<E>) collection;
 		}
-		return new WrapedFluentCollection<>(collection);
+		return WrapedFluentCollection.from(collection);
 	}
 
 	@SuppressWarnings("unchecked")

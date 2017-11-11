@@ -26,7 +26,7 @@ public interface FluentIterable<T> extends Iterable<T> {
 		if (iterable instanceof FluentIterable) {
 			return (FluentIterable<T>) iterable;
 		}
-		return new WrapedFluentIterable<>(iterable);
+		return WrapedFluentIterable.from(iterable);
 	}
 
 	static <T> FluentIterable<T> asIterable(Supplier<? extends Iterator<T>> itarator) {
